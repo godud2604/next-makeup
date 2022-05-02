@@ -22,6 +22,7 @@ const Post = () => {
     if (id && id > 0) {
       getData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return <Item item={item} />
