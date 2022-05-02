@@ -1,31 +1,35 @@
 import axios from "axios";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Head from "next/head";
 import Item from "../../src/component/Item";
 
-const Post = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [item, setItem] = useState({});
-
-  const API_URL = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
-
-  function getData() {
-    axios.get(API_URL)
-      .then((res) => {
-        setItem(res.data)
-        
-      });
-  }
-
-  useEffect(() => {
-    if (id && id > 0) {
-      getData();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  return <Item item={item} />
+const Post = ({ item }) => {
+  
+  return (
+    <>
+      {item && (
+        <>
+          <Head>
+            <title>{item.name}</title>
+            <meta name="description" content={item.description} ></meta>
+          </Head>
+          <Item item={item} /> 
+        </>
+      )}
+    </>
+  )
 };
 
 export default Post;
+
+export async function getServerSideProps(context) {
+  const id = context.params.id; // context : params, 요청, query 등이 담겨있다.
+  const apiUrl = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
+  const res = await axios.get(apiUrl);
+  const data = res.data;
+
+  return {
+    props: {
+      item: data,
+    },
+  };
+}
