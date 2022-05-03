@@ -2,7 +2,7 @@ import axios from "axios";
 import Head from "next/head";
 import Item from "../../src/component/Item";
 
-const Post = ({ item }) => {
+const Post = ({ item, name }) => {
   
   return (
     <>
@@ -30,6 +30,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       item: data,
+      name: process.env.name,
     },
   };
 }
