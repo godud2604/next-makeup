@@ -16,6 +16,8 @@ export default function Gnb() {
       router.push('/');
     } else if (data.name === 'about') {
       router.push('/about');
+    } else if (data.name === 'contact') {
+      router.push('/contact');
     }
   };
 
@@ -29,6 +31,11 @@ export default function Gnb() {
       <Menu.Item 
         name='about'
         active={activeItem === 'about'}
+        onClick={goLink}
+      />
+      <Menu.Item 
+        name='contact'
+        active={activeItem === 'contact'}
         onClick={goLink}
       />
     </Menu>       
