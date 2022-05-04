@@ -6,33 +6,7 @@ import { Dimmer, Divider, Header, Loader, Segment } from 'semantic-ui-react';
 import ItemList from '../src/component/ItemList';
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
-  const [list, setList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-  function getData() {
-    axios.get(API_URL)
-      .then((res) => {
-        setList(res.data);
-        setIsLoading(false);
-      }
-    );
-  }
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div style={{ padding: "300px 0"}}>
-        <Loader inline="centered" active />
-      </div>
-    )
-  }
-
+export default function Home({ list }) {
   return (
     <>
       <Head>
@@ -51,4 +25,18 @@ export default function Home() {
       <ItemList list={list.slice(9)} />
     </>
   )
+}
+
+
+export async function getStaticProps() {
+  const apiUrl = process.env.apiUrl;
+  const res = await axios.get(apiUrl);
+  const data = res.data;
+
+  return {
+    props: {
+      list: data,
+      name: process.env.name,
+    }
+  }
 }
