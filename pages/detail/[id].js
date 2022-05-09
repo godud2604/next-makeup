@@ -38,14 +38,17 @@ export default Post;
 // => 즉, 빈 화면이 나오고, 새로고침하면 또 빈 화면이 나온다.
 
 export async function getStaticPaths() {
+  const apiUrl = process.env.apiUrl;
+  const res = await axios.get(apiUrl);
+  const data = res.data;
+
   return {
-    // 제일 상위 제품 3개만 우선 지정
-    paths: [
-      { params: { id: '740' } },
-      { params: { id: '730' } },
-      { params: { id: '729' } },
-    ],
-    fallback: true, // fallback을 true로 설정해두어서, 위의 paths에서 id를 지정하지 않은 것들도 페이지를 생성할 수 있다. 만약 false였다면 404페이지가 생성된다.
+    paths: data.slice(0, 9).map(item => ({
+      params: {
+        id: item.id.toString(),
+      },
+    })),
+    fallback: true,
   };
 }
 
