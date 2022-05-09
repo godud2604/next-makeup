@@ -1,9 +1,22 @@
 import axios from "axios";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { Loader } from "semantic-ui-react";
 import Item from "../../src/component/Item";
 
 const Post = ({ item, name }) => {
-  
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return (
+      <div style={{ padding: "100px 0" }}>
+        <Loader active inline="centered">
+          Loading
+        </Loader>
+      </div>
+    )
+  }
+
   return (
     <>
       {item && (
@@ -21,14 +34,18 @@ const Post = ({ item, name }) => {
 
 export default Post;
 
+// 개발 환경은 getStaticPath 와 getStaticProps가 요청할 때마다 호출이 되기때문에, 테스트하기에 더 편리하다.
+// => 즉, 빈 화면이 나오고, 새로고침하면 또 빈 화면이 나온다.
+
 export async function getStaticPaths() {
   return {
+    // 제일 상위 제품 3개만 우선 지정
     paths: [
       { params: { id: '740' } },
       { params: { id: '730' } },
       { params: { id: '729' } },
     ],
-    fallback: true,
+    fallback: true, // fallback을 true로 설정해두어서, 위의 paths에서 id를 지정하지 않은 것들도 페이지를 생성할 수 있다. 만약 false였다면 404페이지가 생성된다.
   };
 }
 
